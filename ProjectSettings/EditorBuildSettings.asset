@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/LobbyTutorial_Done.unity
+    guid: be8200a558cfff84b8ce074fa6e33558
+  - enabled: 1
+    path: Assets/Scenes/GameScene.unity
+    guid: e9a985d6a15d50848b01e9c4d5e4c932
+  - enabled: 0
+    path: Assets/Scenes/marchScene.unity
+    guid: 0ff4e3c9a4eb7bd4b9859406c2c426d4
+  m_configObjects: {}

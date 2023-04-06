@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea90fe43036a4d44d906a3f45c7c7ed7, type: 3}
+  m_Name: fireball
+  m_EditorClassIdentifier: 
+  name: fireball
+  spellIcon: {fileID: 21300000, guid: eee4a6e95f94b8a4685ab19fc132f57a, type: 3}
+  description: a slow projectile that destroys tiles
+  searchTags: []
+  deathTexts: []
+  UI_color: {r: 1, g: 0.16605513, b: 0.033018887, a: 1}
+  inQueue: 0
+  castTime: 0
+  cooldownTime: 0
+  currentCooldown: 0
+  hasActiveTime: 0
+  canCancelActiveTime: 0
+  activeTime: 0
+  currentActiveTime: 0
+  object_toSpawn: {fileID: 2106481523194986491, guid: 0036e743b9be9534d9b797c2c1968310, type: 3}
+  spawnInLookDirection: 1

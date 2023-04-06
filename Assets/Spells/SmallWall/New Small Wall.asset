@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcb0af79c2a12484e83fc04ddb1c8965, type: 3}
+  m_Name: New Small Wall
+  m_EditorClassIdentifier: 
+  name: smallWall
+  spellIcon: {fileID: 21300000, guid: a89fb4b2734939a43bbddc6089f7ac64, type: 3}
+  description: a lil tiny (temp) wall
+  searchTags: []
+  deathTexts: []
+  UI_color: {r: 0.5943396, g: 0.3238036, b: 0, a: 1}
+  inQueue: 0
+  castTime: 0
+  cooldownTime: 0.5
+  currentCooldown: 1.0042919
+  hasActiveTime: 0
+  canCancelActiveTime: 0
+  activeTime: 0
+  currentActiveTime: 0
+  wall: {fileID: 6630959690161458477, guid: 1cfc9d23b6ae1084d930addb451211a5, type: 3}

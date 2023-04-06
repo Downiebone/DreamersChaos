@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a19c26fb92ef4164696a241e215ea6fe, type: 3}
+  m_Name: New Dash Ability
+  m_EditorClassIdentifier: 
+  name: dash
+  spellIcon: {fileID: 21300000, guid: 3c18f73a60ea44946bd0bf2123697ff9, type: 3}
+  description: dash upwards
+  searchTags: []
+  deathTexts: []
+  UI_color: {r: 0.7216981, g: 0.94478136, b: 1, a: 1}
+  inQueue: 0
+  castTime: 0
+  cooldownTime: 0
+  currentCooldown: 0
+  hasActiveTime: 1
+  canCancelActiveTime: 1
+  activeTime: 1
+  currentActiveTime: 1.0039104
+  flightForce: 20
