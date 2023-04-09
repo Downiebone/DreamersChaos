@@ -29,6 +29,13 @@ public class lobbySpell_info : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
         updateUI();
     }
+    public void setEverythingInGame(spell spellinf)
+    {
+        iconImage.sprite = spellinf.spellIcon;
+        spellName = spellinf.name;
+        spellDescript = spellinf.description;
+        tags = spellinf.searchTags;
+    }
 
 
     public void updateUI()

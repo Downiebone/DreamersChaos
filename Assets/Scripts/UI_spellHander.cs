@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Drawing.Text;
 
 public class UI_spellHander : MonoBehaviour
 {
@@ -59,11 +60,14 @@ public class UI_spellHander : MonoBehaviour
 
                 GO.GetComponent<Button>().onClick.AddListener(delegate { insertNewSpell(spell_Info.allSpellList[i].spell_script); }); //set onclick of this item
 
+                addTooltipForSpell(GO, spell_Info.allSpellList[i].spell_script);
+
                 spell_Info.allSpellList[i].owned = true;
 
                 break;
             }
         }
+        
         //foreach (spellList.NamedImage spelInf in spell_Info.allSpellList)
         //{
         //    if (spelInf.banned) { continue; }
@@ -82,6 +86,11 @@ public class UI_spellHander : MonoBehaviour
         //        break;
         //    }
         //}
+    }
+    private void addTooltipForSpell(GameObject UI_object, spell m_spell)
+    {
+        lobbySpell_info tooltipStuff = UI_object.GetComponent<lobbySpell_info>();
+        tooltipStuff.setEverythingInGame(m_spell);
     }
     private void Awake()
     {
@@ -125,6 +134,8 @@ public class UI_spellHander : MonoBehaviour
     {
         if (hotBar.canUseHotbar == false)
             return;
+
+        TooltipObject.hide();
 
         spellSelectScreen.gameObject.SetActive(false);
         hotBar.setSpell(spellToIns);
