@@ -8,6 +8,9 @@ public class TerrainPoint {
 
     // The distance from the surface, we're setting to 1 by default because that is "above"
     // the surface. In other words, air.
+    /// <summary>
+    /// 1 = air,,,, 0 = ground
+    /// </summary>
     public int dstToSurface = 1;
 
     // The ID of the texture this point will be located at.

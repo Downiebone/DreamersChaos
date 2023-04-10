@@ -19,7 +19,9 @@ public class Chunk {
 
     [NonSerialized] private TerrainPoint[,,] terrainMap;
 
-    public TerrainPoint[,,] smallerTerrainMapForSer;
+    //public TerrainPoint[,,] smallerTerrainMapForSer;
+
+    public List<int>[,] savedTerrainPoints;
 
     [NonSerialized] private List<Vector3> vertices = new List<Vector3>();
     [NonSerialized] private List<int> triangles = new List<int>();
@@ -30,8 +32,8 @@ public class Chunk {
     [NonSerialized] private bool isFirstZChunk = false;
 
     [NonSerialized] private int width = GameData.ChunkWidth;
-    [NonSerialized] private int height = GameData.ChunkHeight; 
-    public int curMaxHeight;
+    [NonSerialized] private int height = GameData.ChunkHeight;
+    [NonSerialized] public int curMaxHeight;
     [NonSerialized] private float terrainSurface = GameData.terrainSurface;
 
     public Chunk (Vector3Int _position, WorldGenerator n_world) {
@@ -110,7 +112,7 @@ public class Chunk {
 
         // Loop through each "cube" in our terrain.
         for (int x = 0; x < width; x++) {
-            for (int y = 0; y < curMaxHeight; y++) {
+            for (int y = 0; y < height; y++) {
                 for (int z = 0; z < width; z++) {
 
                     // Pass the value into our MarchCube function.
@@ -184,6 +186,7 @@ public class Chunk {
         //int edgeIndex = 0;
 
         int count = vertices.Count;
+        //Debug.Log("poss| " + position.x +"|"+ position.y + "|" + position.z + " |col index:: " + terrainMap[position.x, position.y, position.z].textureID);
         Color curColor = world.theColorsOfTheWorld[terrainMap[position.x, position.y, position.z].textureID];
         int numbs = (GameData.TriangleTable[configIndex].Length) / 3;
         for (var i = 0; i < numbs; i++)
@@ -330,23 +333,36 @@ public class Chunk {
 
     public void convertTerrainMapIntoSerializealbe()
     {
-        smallerTerrainMapForSer = new TerrainPoint[width + 1, curMaxHeight, width + 1];
+        //smallerTerrainMapForSer = new TerrainPoint[width + 1, curMaxHeight, width + 1];
+        savedTerrainPoints = new List<int>[width + 1, width + 1];
+
         //Debug.Log("terrainConvert:");
         //Debug.Log("whole length: " + smallerTerrainMapForSer.Length);
         //for (var i = 0; i < smallerTerrainMapForSer.Length; i++)
         //{
         //    Debug.Log("part '" + i + "' length: " + smallerTerrainMapForSer[i].Length);
         //}
+
         for (var x = 0; x < width + 1; x++)
         {
             for (var z = 0; z < width + 1; z++)
             {
+                savedTerrainPoints[x, z] = new List<int>();
 
-                for (var y = 0; y < curMaxHeight; y++)
+                int lastChangeColor = -1;
+
+                for (var y = 0; y < height + 1; y++)
                 {
-                    TerrainPoint curTerrPoist = terrainMap[x, y, z];
-                    smallerTerrainMapForSer[x, y, z] = new TerrainPoint(curTerrPoist.dstToSurface, curTerrPoist.textureID);
-                        
+                    int newSaveVal = terrainMap[x, y, z].dstToSurface == 1 ? (terrainMap[x, y, z].textureID+10) : terrainMap[x, y, z].textureID;
+                    if (newSaveVal != lastChangeColor)
+                    {
+                        //Debug.Log("saving-- " + x.ToString() + " | " + y.ToString());
+                        lastChangeColor = newSaveVal;
+                        savedTerrainPoints[x, z].Add(lastChangeColor * (GameData.ChunkHeight + 1) + y);
+                    }
+                    //TerrainPoint curTerrPoist = terrainMap[x, y, z];
+                    //smallerTerrainMapForSer[x, y, z] = new TerrainPoint(curTerrPoist.dstToSurface, curTerrPoist.textureID);
+
                 }
             }
         }
@@ -365,24 +381,75 @@ public class Chunk {
     }
     private void converFromSaveableToTerrainpoint()
     {
+        //curMaxHeight = height;
         for (var x = 0; x < width + 1; x++)
         {
             for (var z = 0; z < width + 1; z++)
             {
-                for (var y = 0; y < height + 1; y++)
+                //if(savedTerrainPoints[x, z].Count != 0)
+                //{
+                //    int firstToActuallyFillValue = savedTerrainPoints[x, z][0] % (GameData.ChunkHeight + 1);
+                //    for (var y = 0; y < firstToActuallyFillValue; y++)
+                //    {
+                //        terrainMap[x, y, z] = new TerrainPoint(1, 0);
+                //    }
+                //}
+
+                int lastFillVal = 0;
+                for (var i = 0; i < savedTerrainPoints[x, z].Count; i++)
                 {
-                    
-                    if (y >= curMaxHeight)
+                    if(i == savedTerrainPoints[x, z].Count - 1)
                     {
-                        terrainMap[x, y, z] = new TerrainPoint(1, 0);
+                        lastFillVal = savedTerrainPoints[x, z][i] % (GameData.ChunkHeight + 1);
+                        break;
                     }
-                    else
+
+                    int currentColor = savedTerrainPoints[x, z][i] / (GameData.ChunkHeight + 1);
+                    
+                    int firstVal = savedTerrainPoints[x, z][i] % (GameData.ChunkHeight + 1);
+                    int toFillVal = savedTerrainPoints[x, z][i + 1] % (GameData.ChunkHeight + 1);
+                    for (var y = firstVal; y < toFillVal; y++)
                     {
-                        TerrainPoint curTerrPoist = smallerTerrainMapForSer[x, y, z];
-                        terrainMap[x, y, z] = new TerrainPoint((int)curTerrPoist.dstToSurface, curTerrPoist.textureID);
+                        if(currentColor >= 10)
+                            terrainMap[x, y, z] = new TerrainPoint(1, (currentColor -10));
+                        else
+                            terrainMap[x, y, z] = new TerrainPoint(0, currentColor);
                     }
                 }
-            }
+                //if (lastFillVal > curMaxHeight)
+                //    curMaxHeight = lastFillVal;
+                for (var y = lastFillVal; y < height + 1; y++)
+                {
+                    terrainMap[x, y, z] = new TerrainPoint(1,1);
+                }
+                    //for (var y = 0; y < height + 1; y++)
+                    //{
+
+                    //    int currentChoose = 0;
+                    //    int currentColor = 9;
+                    //    if (y < savedTerrainPoints[x, z][currentChoose] % (GameData.ChunkHeight + 1))
+                    //    {
+
+                    //    }
+                    //    else
+                    //    {
+                    //        currentColor = savedTerrainPoints[x, z][currentChoose] / (GameData.ChunkHeight + 1);
+                    //    }
+
+                    //    if (y >= curMaxHeight)
+                    //    {
+                    //        terrainMap[x, y, z] = new TerrainPoint(1, 0);
+                    //    }
+                    //    else
+                    //    {
+                    //        int currentChoose = -1;
+                    //        int lastUsedColor = 9;
+
+                    //        TerrainPoint curTerrPoist = smallerTerrainMapForSer[x, y, z];
+                    //        terrainMap[x, y, z] = new TerrainPoint((int)curTerrPoist.dstToSurface, curTerrPoist.textureID);
+                    //    }
+                    //}
+                }
         }
     }
 
