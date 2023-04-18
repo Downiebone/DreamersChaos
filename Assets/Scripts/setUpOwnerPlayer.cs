@@ -20,6 +20,7 @@ public class setUpOwnerPlayer : NetworkBehaviour
             camObject.SetActive(IsOwner);
 
             if (!IsOwner) {
+                anim.gameObject.GetComponent<playerGraphicsHolder>().enableCharacter(true);
                 foreach (Component comp in playerGameOb.GetComponents<Component>())
                 {
                     if (!(comp is Transform))
