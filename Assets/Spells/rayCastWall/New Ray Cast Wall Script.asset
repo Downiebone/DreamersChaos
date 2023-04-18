@@ -18,12 +18,17 @@ MonoBehaviour:
   searchTags: []
   deathTexts: []
   UI_color: {r: 0.5754717, g: 0.30222833, b: 0, a: 1}
+  spellRarity: 0
+  spellAnimation: 1
   inQueue: 0
   castTime: 1
   cooldownTime: 3
-  currentCooldown: 1.0027272
+  currentCooldown: 1.6189951
   hasActiveTime: 0
   canCancelActiveTime: 0
   activeTime: 0
   currentActiveTime: 0
   objToSpawn: {fileID: 3012561256012035624, guid: 31534a1c90c99a1438eb3d30745a8a0e, type: 3}
+  objectsToHit:
+    serializedVersion: 2
+    m_Bits: 2112

@@ -4,12 +4,29 @@ using UnityEngine;
 
 public class spell : ScriptableObject
 {
+    public enum SpellRarity
+    {
+        Common,
+        Rare,
+        Epic,
+        Legendary
+    }
+    public enum SpellAnimation
+    {
+        Instant,
+        Big,
+        Normal
+    }
+
     public new string name;
     public Sprite spellIcon;
     public string description;
     public string[] searchTags;
     public string[] deathTexts;
     public Color UI_color = Color.blue;
+    public SpellRarity spellRarity;
+    public SpellAnimation spellAnimation;
+
 
     public bool inQueue;
     public float castTime = 0;

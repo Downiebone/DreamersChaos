@@ -21,6 +21,7 @@ public class hotBarScript : MonoBehaviour
     private int hotBarSelected = 0;
 
     [HideInInspector] public pauseManager pauseScript;
+    [HideInInspector] public Animator myPlayerAnim;
 
     private KeyCode[] keyCodes = {
          KeyCode.Alpha1,
@@ -198,11 +199,29 @@ public class hotBarScript : MonoBehaviour
 
     private IEnumerator castSpell(spell spell)
     {
+        myPlayerAnim.SetTrigger(spell.spellAnimation.ToString());
+
         castSpellUI.startCastVisuals(spell.castTime, spell.name, spell.UI_color);
         spell.preCastTime_Activate(parent_Player, firePoint); // used for charge-effects?
         spell.currentActiveTime = -spell.castTime;
 
-        yield return new WaitForSeconds(spell.castTime);
+
+        if (spell.spellAnimation == spell.SpellAnimation.Instant)
+        {
+            yield return new WaitForSeconds(spell.castTime);
+        }
+        else
+        {
+            yield return new WaitForSeconds(spell.castTime - 0.2f);
+            myPlayerAnim.SetTrigger("Next");
+            yield return new WaitForSeconds(0.2f);
+
+        }
+
+
+        
+
+        
 
         spell.Activate(parent_Player, firePoint);
         spell.currentCooldown = 0;

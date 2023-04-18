@@ -107,7 +107,8 @@ public class WorldGenerator : MonoBehaviour {
         }
         await Task.Run(() =>
         {
-            LoadChunksFromJson(fileName);
+            string path = "MarchingCubes/" + fileName;
+            loadResourcesFileGAME(path);
         });
         setupPlayer.setReadyForGame();
         
@@ -741,19 +742,12 @@ public class WorldGenerator : MonoBehaviour {
     {
 #if UNITY_EDITOR
         string path = "MarchingCubes/" + fileName;
-        loadResourcesFile(path);
+        loadResourcesFileDirect(path);
 #elif UNITY_STANDALONE //TODO: MAKE IT LOAD FROM RESOURCES!! maybe: https://answers.unity.com/questions/8187/how-can-i-read-binary-files-from-resources.html
 
-        if (!inEditorScene)
-        {
-            string path = "MarchingCubes/" + fileName;
-            loadResourcesFile(path);
-        }
-        else
-        {
-            string path = Application.persistentDataPath + "/MarchingCubesSaves/" + fileName;
-            loadLocalFile(path);
-        }
+        string path = Application.persistentDataPath + "/MarchingCubesSaves/" + fileName;
+        loadLocalFile(path);
+
 #endif
     }
 
@@ -799,7 +793,7 @@ public class WorldGenerator : MonoBehaviour {
 
         theColorsOfTheWorld = new_ColorsOfTheWorld;
     }
-    public void loadResourcesFile(string path)
+    public void loadResourcesFileGAME(string path)
     {
         Debug.Log("LOADING RESOURCES FROM " + path);
         Debug.Log("Assets/Resources/" + path + "/chunks.bytes");
@@ -815,29 +809,11 @@ public class WorldGenerator : MonoBehaviour {
         byte[] chunkString;
         byte[] colorString;
 
-        if (inEditorScene)
-        {
-            TextAsset vectorTextAsset = Resources.Load(path + "/vectors") as TextAsset;
-            TextAsset chunkTextAsset = Resources.Load(path + "/chunks") as TextAsset;
-            TextAsset colorTextAsset = Resources.Load(path + "/colors") as TextAsset;
 
-            Debug.Log("1");
-            Debug.Log(vectorTextAsset);
-            Debug.Log("2");
-            Debug.Log(vectorTextAsset.text);
-            Debug.Log("3");
-            Debug.Log(vectorTextAsset.bytes);
-
-            vectorString = vectorTextAsset.bytes;
-            chunkString = chunkTextAsset.bytes;
-            colorString = colorTextAsset.bytes;
-        }
-        else
-        {
-            vectorString = LoadedvectorTextAsset;
-            chunkString = LoadedchunkTextAsset;
-            colorString = LoadedcolorTextAsset;
-        }
+        vectorString = LoadedvectorTextAsset;
+        chunkString = LoadedchunkTextAsset;
+        colorString = LoadedcolorTextAsset;
+        
         
 
         Debug.Log("loading vectorsString: " + vectorString.Length);
@@ -853,6 +829,7 @@ public class WorldGenerator : MonoBehaviour {
         Debug.Log("loading: " + Mathf.Sqrt(chunkList.Count).ToString() + " * " + Mathf.Sqrt(chunkList.Count).ToString() + " chunks");
 
         WorldSizeInChunks = (int)Mathf.Sqrt(chunkList.Count);
+        chunks.Clear();
         for (var i = 0; i < chunkList.Count; i++)
         {
             chunks.Add(sKeyList[i], chunkList[i]);
@@ -868,7 +845,72 @@ public class WorldGenerator : MonoBehaviour {
         theColorsOfTheWorld = new_ColorsOfTheWorld;
     }
 
-    public Chunk GetChunkFromVector3 (Vector3 pos) {
+    public void loadResourcesFileDirect(string path)
+    {
+
+        Debug.Log("LOADING RESOURCES FROM " + path);
+        Debug.Log("Assets/Resources/" + path + "/chunks.bytes");
+#if UNITY_EDITOR
+        if (!File.Exists("Assets/Resources/" + path + "/chunks.bytes"))
+        {
+            Debug.LogError("FILE DOEST NOT EXIST, CANT LOAD");
+            return;
+        }
+#endif
+
+        byte[] vectorString;
+        byte[] chunkString;
+        byte[] colorString;
+
+
+        TextAsset vectorTextAsset = Resources.Load(path + "/vectors") as TextAsset;
+        TextAsset chunkTextAsset = Resources.Load(path + "/chunks") as TextAsset;
+        TextAsset colorTextAsset = Resources.Load(path + "/colors") as TextAsset;
+
+        Debug.Log("1");
+        Debug.Log(vectorTextAsset);
+        Debug.Log("2");
+        Debug.Log(vectorTextAsset.text);
+        Debug.Log("3");
+        Debug.Log(vectorTextAsset.bytes);
+
+        vectorString = vectorTextAsset.bytes;
+        chunkString = chunkTextAsset.bytes;
+        colorString = colorTextAsset.bytes;
+  
+
+
+
+        Debug.Log("loading vectorsString: " + vectorString.Length);
+        Debug.Log("loading chunksString: " + chunkString.Length);
+        List<SVector3Int> keyList = Deserializer<List<SVector3Int>>(vectorString);
+        List<Vector3Int> sKeyList = new List<Vector3Int>();
+        for (var i = 0; i < keyList.Count; i++)
+        {
+            sKeyList.Add(keyList[i]);
+        }
+        List<Chunk> chunkList = Deserializer<List<Chunk>>(chunkString);
+
+        Debug.Log("loading: " + Mathf.Sqrt(chunkList.Count).ToString() + " * " + Mathf.Sqrt(chunkList.Count).ToString() + " chunks");
+
+        WorldSizeInChunks = (int)Mathf.Sqrt(chunkList.Count);
+        chunks.Clear();
+        for (var i = 0; i < chunkList.Count; i++)
+        {
+            chunks.Add(sKeyList[i], chunkList[i]);
+        }
+
+        SColor[] Snew_ColorsOfTheWorld = Deserializer<SColor[]>(colorString);
+        Color[] new_ColorsOfTheWorld = new Color[Snew_ColorsOfTheWorld.Length];
+        for (var i = 0; i < Snew_ColorsOfTheWorld.Length; i++)
+        {
+            new_ColorsOfTheWorld[i] = Snew_ColorsOfTheWorld[i];
+        }
+
+        theColorsOfTheWorld = new_ColorsOfTheWorld;
+    }
+
+        public Chunk GetChunkFromVector3 (Vector3 pos) {
 
         int x = (int)pos.x;
         int y = (int)pos.y;
@@ -907,7 +949,8 @@ public class WorldGenerator : MonoBehaviour {
             //Do stuff only when in editor and not in playmode
             if (loadFromFile == true)
             {
-                LoadChunksFromJson(fileName);
+                string path = "MarchingCubes/" + fileName;
+                loadResourcesFileDirect(path);
                 editorReloadChunks();
             }
             else

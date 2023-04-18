@@ -18,12 +18,14 @@ MonoBehaviour:
   searchTags: []
   deathTexts: []
   UI_color: {r: 0.7216981, g: 0.94478136, b: 1, a: 1}
+  spellRarity: 0
+  spellAnimation: 2
   inQueue: 0
-  castTime: 0
-  cooldownTime: 0
-  currentCooldown: 0
+  castTime: 1
+  cooldownTime: 1
+  currentCooldown: 1.0037944
   hasActiveTime: 1
   canCancelActiveTime: 1
   activeTime: 1
-  currentActiveTime: 1.0039104
+  currentActiveTime: 1.0033213
   flightForce: 20

@@ -14,6 +14,8 @@ public class basic_projectile : NetworkBehaviour
     [Range(1, 1000)]
     [SerializeField] protected int destroyObjectsRange = 2;
 
+    [SerializeField] protected LayerMask hitGroundLayer;
+
     protected void Start()
     {
         if (spawnWithoutHittingAnything && timeBeforeDeath != 0)
@@ -29,16 +31,21 @@ public class basic_projectile : NetworkBehaviour
 
     protected void projectileDeathSpawn()
     {
-        if(instUponDeath != null)
-        {
-            Instantiate(instUponDeath, transform.position, transform.rotation);
-        }
+        
 
         if (!NetworkManager.Singleton.IsServer) return;  // do server things
 
         if(willDestroyObjects == true)
         {
             //WorldGenerator.Instance?.ModifyChunkFastGameExplosion(transform.position, destroyObjectsRange);
+            Collider[] cols = Physics.OverlapSphere(transform.position, destroyObjectsRange * 0.75f, hitGroundLayer, QueryTriggerInteraction.Ignore);
+            foreach(Collider c in cols)
+            {
+                NetworkObject ob = c.GetComponentInParent<NetworkObject>();
+                Destroy(c.gameObject);
+                c.GetComponentInParent<NetworkObject>().Despawn();
+            }
+            
             ChunkExplosionClientRpc(transform.position, destroyObjectsRange);
         }
 
@@ -49,6 +56,10 @@ public class basic_projectile : NetworkBehaviour
     [ClientRpc]
     private void ChunkExplosionClientRpc(Vector3 pos, int range)
     {
+        if (instUponDeath != null)
+        {
+            Instantiate(instUponDeath, transform.position, transform.rotation);
+        }
         WorldGenerator.Instance?.ModifyChunkFastGameExplosion(pos, range);
     }
 

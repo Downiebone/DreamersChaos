@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 public class spellList : MonoBehaviour
 {
+    public static spellList Instance;
+
     [Serializable]
     public struct NamedImage
     {
@@ -15,6 +17,16 @@ public class spellList : MonoBehaviour
 
     private void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
+        if(Instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+
+        
     }
 }

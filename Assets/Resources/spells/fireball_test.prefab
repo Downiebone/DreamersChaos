@@ -89,6 +89,9 @@ MonoBehaviour:
   canHitSelf: 0
   willDestroyObjects: 1
   destroyObjectsRange: 6
+  hitGroundLayer:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!33 &4416581867367686809
 MeshFilter:
   m_ObjectHideFlags: 0

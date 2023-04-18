@@ -60,6 +60,9 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isInitedMovement = false;
 
+    [Header("graphics")]
+    [SerializeField] private Transform playerModel;
+
     public void initPlayerMovement()
     {
         isInitedMovement = true;
@@ -104,6 +107,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isInitedMovement == false)
             return;
+
+        playerModel.rotation = orientation.rotation;
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 

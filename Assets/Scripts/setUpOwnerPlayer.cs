@@ -10,15 +10,14 @@ public class setUpOwnerPlayer : NetworkBehaviour
 
     [SerializeField] private GameObject playerGameOb;
     [SerializeField] private GameObject camObject;
-    [SerializeField] private GameObject lookObject;
     [SerializeField] private PlayerMovement myPlayerMovement;
+    [SerializeField] private Animator anim;
 
 
     public override void OnNetworkSpawn()
     {
         {
             camObject.SetActive(IsOwner);
-            lookObject.SetActive(!IsOwner);
 
             if (!IsOwner) {
                 foreach (Component comp in playerGameOb.GetComponents<Component>())
@@ -35,6 +34,7 @@ public class setUpOwnerPlayer : NetworkBehaviour
             
             this.gameObject.tag = "MyPlayer";
             GameObject hotbar = GameObject.FindGameObjectWithTag("HotBarSystem");
+            hotbar.GetComponent<hotBarScript>().myPlayerAnim = anim;
             hotbar.GetComponent<hotBarScript>().enabled = true;
             hotbar.GetComponent<hotBarScript>().Init(orientation, firePoint);
 
@@ -106,6 +106,11 @@ public class setUpOwnerPlayer : NetworkBehaviour
         PlayerPrefs.SetFloat("KNOCKBACK_MOD", knockbackMod);
         PlayerPrefs.SetFloat("DAMAGE_MOD", damageMod);
         PlayerPrefs.SetFloat("COOLDOWN_MOD", cooldownMod);
+
+        if(spellStart > spellList.Instance.allSpellList.Length)
+        {
+            spellStart = spellList.Instance.allSpellList.Length;
+        }
 
         for(var i = 0; i < spellStart; i++)
         {
